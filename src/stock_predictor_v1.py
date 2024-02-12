@@ -55,9 +55,9 @@ class StockPredictor:
         #Initialize our x axis(for plotting)
         self.x_time = self.stock_data.index[self.stock_data.shape[0] - self.cfg.test_days : self.stock_data.shape[0]]
 
-    def mk_tnsr(self):#Create target_column
-        target_column  = self.stock_data[self.cfg.ticker_to_predict]
-        target_column = pd.DataFrame({self.cfg.ticker_to_predict: target_column })
+    def mk_tnsr(self, stock_to_predict):#Create target_column
+        target_column  = self.stock_data[stock_to_predict]
+        target_column = pd.DataFrame({stock_to_predict: target_column })
         target_column = target_column.iloc[7:]
         self.today_price = np.squeeze(target_column.tail(1).to_numpy())
 
@@ -100,21 +100,31 @@ class StockPredictor:
         self.tomorrow_price = np.squeeze(self.y_predicted_transformed[-1])
     
     def prediction_container(self):
-        #MAIN
+        outgoing_trades = []
         self.grab_data()
-        self.mk_tnsr()
-        pprint(self.x_train.shape)
-        pprint(self.y_train.shape)
-        print('-----------------------------------------------------------------------------------------------------')
-        pprint(self.x_test.shape)
-        pprint(self.y_test.shape)
-        self.get_trained_model()
-        self.get_predictions()
 
-        print("RMSE for neural net:", np.sqrt(np.mean((self.y_test - self.y_predicted_transformed[:-1])**2)))
+        for stock_to_predict in self.cfg.stocks_to_predict:
+            self.mk_tnsr(stock_to_predict)
+            print('-----------------------------------------------------------------------------------------------------')
+            pprint(self.x_train.shape)
+            pprint(self.y_train.shape)
+            print('-----------------------------------------------------------------------------------------------------')
+            pprint(self.x_test.shape)
+            pprint(self.y_test.shape)
+            print('-----------------------------------------------------------------------------------------------------')
+            self.get_trained_model()
+            self.get_predictions()
+            print("RMSE for neural net:", np.sqrt(np.mean((self.y_test - self.y_predicted_transformed[:-1])**2)))
+
+            outgoing_trades.append(self.form_trade(stock_to_predict))
+        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print('Outgoing trades:')
+        pprint(outgoing_trades)
+        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        return outgoing_trades
     
-    def get_trades(self):
-        outgoing_trade = Trade(self.cfg.ticker_to_predict, TradeType.SIT, 1)
+    def form_trade(self, stock_to_predict):
+        outgoing_trade = Trade(stock_to_predict, TradeType.SIT, 1)
 
         print(f'Todays Price {self.today_price}')
         print(f'Tomorrows Predicted Price {self.tomorrow_price}')
@@ -127,4 +137,4 @@ class StockPredictor:
 
         outgoing_trade.num_shares = self.cfg.trading_quanta/self.today_price
 
-        return [outgoing_trade]
+        return outgoing_trade

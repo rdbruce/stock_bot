@@ -1,7 +1,7 @@
 !StockConfig
 ticker_list: ["MOS", "FMC", "AVD", "ADM", "BG", "SMG", "TSCO", "AGCO", "SEB", "FDP", "DE", "CTVA", "NTR", "CF", "BG", "DAR", "BIOX", "STKL", "VITL", "CVGW", "CORN", "SOYB", "WEAT", "CANE", "UAN", "IPI", "DBA", "MOO", "PHO", "UNG", "ZC=f"]
 
-ticker_to_predict: 'SMG'
+stocks_to_predict: ['SMG', 'UNG']
 
 #Analysis
 window_size: 7

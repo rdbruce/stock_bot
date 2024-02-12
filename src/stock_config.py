@@ -7,7 +7,7 @@ yaml = YAML(typ='safe')
 @dataclass
 class StockConfig:
   ticker_list: list
-  ticker_to_predict: str
+  stocks_to_predict: list
   window_size: int
   test_days: int
   num_days_concerned: int

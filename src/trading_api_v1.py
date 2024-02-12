@@ -13,6 +13,15 @@ class TradingApi:
             quit()
 
     def post_next_day_trades(self, trades):
+        portfolio = self.trading_client.get_all_positions()
+        # Print the quantity of shares for each position.
+        print('------------------------------------------------------------------------')
+        print('Our current portfolio before our trades:')
+        for position in portfolio:
+            print("{} shares of {}".format(position.qty, position.symbol))
+            logging.info("{} shares of {}".format(position.qty, position.symbol))
+        print('------------------------------------------------------------------------')
+        
         for trade in trades:
             print(f'processing {trade}')
             if trade.trade_type == TradeType.BUY:
@@ -36,14 +45,7 @@ class TradingApi:
                 logging.info(market_order_data)
                 market_order = self.trading_client.submit_order(order_data=market_order_data)
             else:
-                print('No trades for today.')
+                print(f'No trades for {trade}.')
                 logging.info('No trades for today.')
-            
-
-        portfolio = self.trading_client.get_all_positions()
-        # Print the quantity of shares for each position.
-        for position in portfolio:
-            print("{} shares of {}".format(position.qty, position.symbol))
-            logging.info("{} shares of {}".format(position.qty, position.symbol))
 
 

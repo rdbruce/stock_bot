@@ -14,9 +14,8 @@ logging.basicConfig(filename=f'{os.environ["HOME"]}/stock_log.log', level=loggin
 def analyze_and_trade():
     processor = TradingApi(config)
     predictor = StockPredictor(config)
-    pprint(predictor.prediction_container())
-
-    trades = predictor.get_trades()
+    
+    trades = predictor.prediction_container()
     #pprint(trades)
 
     if args.enable_trading is True:
@@ -49,7 +48,6 @@ else:
         # delay until next time day equals 6am
         now = datetime.now()
         next_run = now.replace(day=now.day+1, hour=1, minute=0, second=0, microsecond=0)
-        # next_run = now.replace(minute=now.minute+1, second=0, microsecond=0)
         while next_run.weekday() in [ 5, 6 ]:
             next_run = next_run.replace(day=next_run.day+1)
         time_diff = (next_run - now).total_seconds()
