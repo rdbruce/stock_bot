@@ -1,0 +1,16 @@
+!StockConfig
+ticker_list: ["MOS", "FMC", "AVD", "ADM", "BG", "SMG", "TSCO", "AGCO", "SEB", "FDP", "DE", "CTVA", "NTR", "CF", "BG", "DAR", "BIOX", "STKL", "VITL", "CVGW", "CORN", "SOYB", "WEAT", "CANE", "UAN", "IPI", "DBA", "MOO", "PHO", "UNG", "ZC=f"]
+
+ticker_to_predict: 'SMG'
+
+#Analysis
+window_size: 7
+test_days: 100
+num_days_concerned: 1000
+batch_size: 6
+epochs: 100
+
+#Trading
+trading_quanta: 1000
+api_key: 'paste key here'
+secret_api_key: 'paste secret key here'
