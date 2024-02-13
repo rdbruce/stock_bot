@@ -5,7 +5,7 @@ stocks_to_predict: ['SMG', 'UNG']
 
 #Analysis
 window_size: 7
-test_days: 100
+test_days: 100 #Only used when trading is disabled
 num_days_concerned: 1000
 batch_size: 6
 epochs: 100

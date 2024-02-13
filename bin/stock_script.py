@@ -14,12 +14,12 @@ logging.basicConfig(filename=f'{os.environ["HOME"]}/stock_log.log', level=loggin
 def analyze_and_trade():
     processor = TradingApi(config)
     predictor = StockPredictor(config)
-    
-    trades = predictor.prediction_container()
-    #pprint(trades)
 
     if args.enable_trading is True:
+        trades = predictor.prediction_container()
         processor.post_next_day_trades(trades)
+    else:
+        predictor.test_container()
 
 #Enter args
 parser = argparse.ArgumentParser(description='Process stock data')

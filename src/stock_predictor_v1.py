@@ -82,8 +82,10 @@ class StockPredictor:
         self.x_train = tensor[: total_rows - self.cfg.test_days, :, :]
         self.x_test = tensor[total_rows - self.cfg.test_days : total_rows, :, :]
         self.y_train = target_column[: total_rows - self.cfg.test_days, :]
-        y_test = target_column[total_rows - self.cfg.test_days : total_rows, :]
-        self.y_test = self.y_scaler.inverse_transform(y_test)
+        self.y_test = np.ndarray((0,0))
+        if self.cfg.test_days != 1:
+            y_test = target_column[total_rows - self.cfg.test_days : total_rows, :]
+            self.y_test = self.y_scaler.inverse_transform(y_test)
 
     def get_trained_model(self):
         self.model.fit(self.x_train, self.y_train,
@@ -102,6 +104,22 @@ class StockPredictor:
     def prediction_container(self):
         outgoing_trades = []
         self.grab_data()
+        self.cfg.test_days = 1
+
+        for stock_to_predict in self.cfg.stocks_to_predict:
+            self.mk_tnsr(stock_to_predict)
+            self.get_trained_model()
+            self.get_predictions()
+            outgoing_trades.append(self.form_trade(stock_to_predict))
+
+        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print('Outgoing trades:')
+        pprint(outgoing_trades)
+        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        return outgoing_trades
+    
+    def test_container(self):
+        self.grab_data()
 
         for stock_to_predict in self.cfg.stocks_to_predict:
             self.mk_tnsr(stock_to_predict)
@@ -115,13 +133,6 @@ class StockPredictor:
             self.get_trained_model()
             self.get_predictions()
             print("RMSE for neural net:", np.sqrt(np.mean((self.y_test - self.y_predicted_transformed[:-1])**2)))
-
-            outgoing_trades.append(self.form_trade(stock_to_predict))
-        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print('Outgoing trades:')
-        pprint(outgoing_trades)
-        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        return outgoing_trades
     
     def form_trade(self, stock_to_predict):
         outgoing_trade = Trade(stock_to_predict, TradeType.SIT, 1)
