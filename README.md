@@ -14,4 +14,4 @@ In order to use this bot one must make an Alpaca paper trading account and provi
 
 #2 --test_mode Will immediately start analysis and trade where normally the bot waits for market close
 
-#3 --enable_trading Will allow the bot to place paper trades after analysis
+#3 --enable_trading Will allow the bot to place paper trades after analysis of the whole dataset(if trading is disabled the last test_days will be used for prediction error)
