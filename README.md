@@ -2,7 +2,7 @@
 
 ## What is this bot?
 
-This python script uses an LSTM neural net to analyze n day long windows of closing stock prices and produce a next day prediction of the closing price of selected stock(s). From this the bot produces a stock buy/sell decision based on if our prediction is higher or lower than the current stock price. Finally the bot executes the decision as an Alpaca paper trade. The bot runs the morning after every market day.
+This python script uses an LSTM neural net to analyze n day long windows of closing stock prices and produce a next day prediction of the closing price of selected stock(s). The stock data is downloaded using yfinance and the ticker names given in the config file. From this the bot produces a stock buy/sell decision based on if our prediction is higher or lower than the current stock price. Finally the bot executes the decision as an Alpaca paper trade. The bot runs the morning after every market day.
 
 ## Setup
 
